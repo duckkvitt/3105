@@ -1,6 +1,7 @@
 import SwiftUI
 import UIKit
 
+#if !IOS187_DIAGNOSTICS
 @main
 struct ThreeOneOSFiveApp: App {
     @StateObject private var appState = AppState()
@@ -96,6 +97,8 @@ struct ThreeOneOSFiveApp: App {
         }
     }
 }
+
+#endif
 
 class AppState: ObservableObject {
     @Published var exploitStatus: ExploitStatus = .notStarted
