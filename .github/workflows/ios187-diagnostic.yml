@@ -1,0 +1,39 @@
+name: Build 3105 iOS 18.7 Diagnostic
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Build unsigned diagnostic IPA
+        run: python3 scripts/build_ios187_diagnostic.py
+
+      - name: Upload IPA and report
+        uses: actions/upload-artifact@v7
+        with:
+          name: 3105-iOS187-Diagnostic-R1-unsigned
+          path: |
+            build/ios187-artifacts/*.ipa
+            build/ios187-artifacts/build_report.json
+            build/ios187-artifacts/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: 3105-iOS187-Xcode-log
+          path: build/ios187-artifacts/xcodebuild.log
+          if-no-files-found: ignore
+          retention-days: 7
